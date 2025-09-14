@@ -1,0 +1,114 @@
+/* BrainLab Theme 04: Mono (High Contrast) */
+
+:root {
+  --bg: #0f1014;
+  --panel: #15161d;
+  --muted: #a0a3ad;
+  --text: #f2f4f8;
+  --accent: #9aa7ff;
+  --accent2: #c0c6ff;
+  --card: #1a1c26;
+  --ok: #6ee7b7;
+  --warn: #fde68a;
+}
+
+/* Base */
+body {
+  background: radial-gradient(1200px 800px at 75% -10%, #1c1f2a 0%, #0f1014 60%),
+    #0f1014 !important;
+  color: var(--text) !important;
+}
+
+/* Sidebar */
+.sidebar {
+  background: linear-gradient(180deg, #161824 0%, #10121a 100%) !important;
+  border-inline-start: 1px solid rgba(154, 167, 255, 0.25) !important;
+}
+
+/* Panels */
+.panel {
+  background: var(--panel) !important;
+  border: 1px solid #24283b !important;
+}
+
+/* Buttons */
+.btn {
+  border: 1px solid #2a3150 !important;
+  background: #121425 !important;
+  color: var(--text) !important;
+}
+.btn[aria-pressed="true"],
+.btn.active {
+  background: linear-gradient(180deg, #272c4b, #1b1f39) !important;
+  border-color: #3b4bd4 !important;
+  box-shadow: 0 0 0 2px rgba(154, 167, 255, 0.25) inset !important;
+}
+
+/* Tabs */
+.tab {
+  border: 1px solid #2a3150 !important;
+  background: #14172b !important;
+  color: #f1f3ff !important;
+}
+.tab[aria-selected="true"] {
+  background: linear-gradient(180deg, #2b3156, #1c2140) !important;
+  border-color: #5564ff !important;
+}
+
+/* Cards */
+.card {
+  background: linear-gradient(180deg, #1d2134, #14182a) !important;
+  border: 1px solid #2a3150 !important;
+}
+.card h4 {
+  color: #ffffff !important;
+}
+.card p {
+  color: #d7dbed !important;
+}
+
+/* Pill */
+.pill {
+  background: #0f1226 !important;
+  border: 1px solid #2a3150 !important;
+  color: #cfd5ff !important;
+}
+
+/* Tags */
+.tags .tag {
+  border: 1px dashed #3b4270 !important;
+  color: #d6dbff !important;
+}
+
+/* Map */
+.map {
+  background: radial-gradient(
+      800px 400px at 60% -20%,
+      rgba(154, 167, 255, 0.15),
+      transparent 60%
+    ),
+    #14172a !important;
+  border: 1px solid #2a3150 !important;
+}
+
+/* Brain grid cells */
+.cell {
+  border: 1px solid #3a416c !important;
+  background: linear-gradient(180deg, #171a33, #12162a) !important;
+  color: #f3f5ff !important;
+}
+.cell.active {
+  outline: 2px solid var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(154, 167, 255, 0.25) !important;
+}
+
+/* Dialog */
+dialog {
+  background: #171a2e !important;
+  color: var(--text) !important;
+}
+
+/* Footer */
+footer {
+  color: #b8bde0 !important;
+}

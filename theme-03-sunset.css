@@ -1,0 +1,114 @@
+/* BrainLab Theme 03: Sunset */
+
+:root {
+  --bg: #1f0e16;
+  --panel: #2a1320;
+  --muted: #caa0b6;
+  --text: #fff3f7;
+  --accent: #ff7aa2;
+  --accent2: #ffd166;
+  --card: #3a1a29;
+  --ok: #43d787;
+  --warn: #ffd166;
+}
+
+/* Base */
+body {
+  background: radial-gradient(1200px 800px at 75% -10%, #3a1730 0%, #1f0e16 60%),
+    #1f0e16 !important;
+  color: var(--text) !important;
+}
+
+/* Sidebar */
+.sidebar {
+  background: linear-gradient(180deg, #2f1523 0%, #220f19 100%) !important;
+  border-inline-start: 1px solid rgba(255, 122, 162, 0.25) !important;
+}
+
+/* Panels */
+.panel {
+  background: var(--panel) !important;
+  border: 1px solid #542538 !important;
+}
+
+/* Buttons */
+.btn {
+  border: 1px solid #6a2d43 !important;
+  background: #2a1120 !important;
+  color: var(--text) !important;
+}
+.btn[aria-pressed="true"],
+.btn.active {
+  background: linear-gradient(180deg, #6e2d45, #491d31) !important;
+  border-color: #ff7aa2 !important;
+  box-shadow: 0 0 0 2px rgba(255, 122, 162, 0.25) inset !important;
+}
+
+/* Tabs */
+.tab {
+  border: 1px solid #6a2d43 !important;
+  background: #321523 !important;
+  color: #ffeff4 !important;
+}
+.tab[aria-selected="true"] {
+  background: linear-gradient(180deg, #8a3652, #5a2237) !important;
+  border-color: #ff9bb7 !important;
+}
+
+/* Cards */
+.card {
+  background: linear-gradient(180deg, #4a1f33, #341727) !important;
+  border: 1px solid #6a2d43 !important;
+}
+.card h4 {
+  color: #fff7fa !important;
+}
+.card p {
+  color: #ffd9e6 !important;
+}
+
+/* Pill */
+.pill {
+  background: #2a0f1c !important;
+  border: 1px solid #5a2438 !important;
+  color: #ffc0d2 !important;
+}
+
+/* Tags */
+.tags .tag {
+  border: 1px dashed #8a3a56 !important;
+  color: #ffd3e1 !important;
+}
+
+/* Map */
+.map {
+  background: radial-gradient(
+      800px 400px at 60% -20%,
+      rgba(255, 122, 162, 0.15),
+      transparent 60%
+    ),
+    #2a1020 !important;
+  border: 1px solid #6a2d43 !important;
+}
+
+/* Brain grid cells */
+.cell {
+  border: 1px solid #7a344f !important;
+  background: linear-gradient(180deg, #3a1626, #2c101d) !important;
+  color: #fff2f7 !important;
+}
+.cell.active {
+  outline: 2px solid var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(255, 122, 162, 0.25) !important;
+}
+
+/* Dialog */
+dialog {
+  background: #311422 !important;
+  color: var(--text) !important;
+}
+
+/* Footer */
+footer {
+  color: #f8c0d1 !important;
+}

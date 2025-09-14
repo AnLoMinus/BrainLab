@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BrainLab – חקר המוח לילדים ולמבוגרים</title>
+    <!-- <link rel="stylesheet" href="theme-01-ocean.css"> -->
+    <!-- <link rel="stylesheet" href="./theme-02-forest.css"> -->
+    <link rel="stylesheet" href="./theme-03-sunset.css">
+    <!-- <link rel="stylesheet" href="theme-03-light.css"> -->
+
+    <!-- תצוגה בלי עיצוב -->
+    <style>
+        :root {
+            --bg: #0f1226;
+            --panel: #171a34;
+            --muted: #8187a7;
+            --text: #e9ecff;
+            --accent: #7aa2ff;
+            --accent2: #00e1d6;
+            --card: #1e2247;
+            --ok: #43d787;
+            --warn: #ffd166;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: "Rubik", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Helvetica, Arial, sans-serif;
+            background: radial-gradient(1200px 800px at 75% -10%, #1f2553 0%, #0f1226 60%), #0f1226;
+            color: var(--text);
+        }
+
+        a {
+            color: var(--accent)
+        }
+
+        .wrap {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: 100dvh
+        }
+
+        .sidebar {
+            background: linear-gradient(180deg, #171a34 0%, #101330 100%);
+            border-inline-start: 1px solid #232853;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            height: 100dvh;
+            overflow: auto
+        }
+
+        .main {
+            padding: 24px;
+        }
+
+        h1 {
+            font-size: clamp(26px, 3vw, 40px);
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin: 0 0 8px
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin: 0 0 20px
+        }
+
+        .badge {
+            display: inline-flex;
+            gap: .4rem;
+            align-items: center;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            padding: 6px 10px;
+            border-radius: 999px;
+            color: #0a1022;
+            font-weight: 700
+        }
+
+        /* Controls */
+        .panel {
+            background: var(--panel);
+            border: 1px solid #262b59;
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 16px
+        }
+
+        .panel h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: #c9d2ff
+        }
+
+        .btn {
+            border: 1px solid #2a3168;
+            background: #0f132e;
+            color: var(--text);
+            padding: 8px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600
+        }
+
+        .btn[aria-pressed="true"],
+        .btn.active {
+            background: linear-gradient(180deg, #262c63, #1a1e4a);
+            border-color: #3e4793;
+            box-shadow: 0 0 0 2px rgba(122, 162, 255, .25) inset
+        }
+
+        .btn.small {
+            font-size: 12px;
+            padding: 6px 8px
+        }
+
+        .btn.ghost {
+            background: transparent
+        }
+
+        .grid {
+            display: grid;
+            gap: 14px
+        }
+
+        .grid.cols-2 {
+            grid-template-columns: repeat(2, 1fr)
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        .lvl {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px
+        }
+
+        .search {
+            display: flex;
+            gap: 8px
+        }
+
+        .search input {
+            flex: 1;
+            border: 1px solid #303675;
+            background: #0e1332;
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 10px
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .tab {
+            padding: 10px 12px;
+            border: 1px solid #2a3168;
+            border-radius: 12px;
+            background: #111642;
+            color: #dfe5ff;
+            cursor: pointer;
+            font-weight: 700
+        }
+
+        .tab[aria-selected="true"] {
+            background: linear-gradient(180deg, #242a62, #171c4b);
+            border-color: #3e4793;
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 16px
+        }
+
+        .card {
+            background: linear-gradient(180deg, #1b1f46, #13173b);
+            border: 1px solid #2b3065;
+            border-radius: 18px;
+            padding: 14px;
+            /* ריווח עליון נוסף כדי למנוע חפיפה של ה-pill עם הכותרת */
+            padding-top: 44px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .card h4 {
+            margin: 0 0 6px
+        }
+
+        .card p {
+            margin: 0;
+            color: #cdd3ff
+        }
+
+        .pill {
+            position: absolute;
+            inset-inline-start: 12px;
+            top: 12px;
+            background: #10153e;
+            border: 1px solid #2c3170;
+            color: #a9b3ff;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 999px
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px
+        }
+
+        .tag {
+            font-size: 11px;
+            border: 1px dashed #3d4390;
+            border-radius: 999px;
+            padding: 3px 8px;
+            color: #aeb7ff
+        }
+
+        .kiosk {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 16px
+        }
+
+        /* Brain map */
+        .map {
+            background: radial-gradient(800px 400px at 60% -20%, rgba(122, 162, 255, .15), transparent 60%), #14183a;
+            border: 1px solid #2a3168;
+            border-radius: 16px;
+            padding: 12px
+        }
+
+        .brain {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-auto-rows: 50px;
+            gap: 6px
+        }
+
+        .cell {
+            border: 1px solid #384096;
+            background: linear-gradient(180deg, #20265b, #171c46);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #cfe1ff;
+            cursor: pointer;
+            user-select: none
+        }
+
+        .cell.active {
+            outline: 2px solid var(--accent);
+            box-shadow: 0 0 0 3px rgba(122, 162, 255, .25)
+        }
+
+        /* Drawer / modal */
+        dialog {
+            border: none;
+            border-radius: 16px;
+            padding: 0;
+            background: #151a3d;
+            color: var(--text);
+            width: min(680px, 95vw)
+        }
+
+        .dialog-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 1px solid #2b3065
+        }
+
+        .dialog-body {
+            padding: 16px
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 28px;
+            color: #9aa1c9;
+            font-size: 13px
+        }
+
+        @media (max-width: 960px) {
+            .wrap {
+                grid-template-columns: 1fr
+            }
+
+            .sidebar {
+                position: static;
+                height: auto
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" aria-label="סרגל צד">
+            <div class="panel">
+                <h3>🎯 רמת קהל היעד</h3>
+                <div class="lvl">
+                    <button class="btn small" data-level="kids">👶 גן</button>
+                    <button class="btn small" data-level="elem">🧒 יסודי</button>
+                    <button class="btn small" data-level="teen">🧑‍🎓 חט"ב/תיכון</button>
+                    <button class="btn small" data-level="pro">🧪 חוקר</button>
+                </div>
+            </div>
+            <div class="panel">
+                <h3>🔍 חיפוש</h3>
+                <div class="search">
+                    <input id="q" type="search" placeholder="חפש/י תאים, אזורים, מושגים…" aria-label="חיפוש" />
+                    <button class="btn" id="clear">ניקוי</button>
+                </div>
+            </div>
+            <div class="panel">
+                <h3>🧬 סינונים</h3>
+                <div class="chips" id="filters">
+                    <button class="btn small" data-filter="neurons">נוירונים</button>
+                    <button class="btn small" data-filter="glia">גליה</button>
+                    <button class="btn small" data-filter="astro">אסטרוציטים</button>
+                    <button class="btn small" data-filter="oligo">אוליגודנדרוציטים</button>
+                    <button class="btn small" data-filter="micro">מיקרוגליה</button>
+                    <button class="btn small" data-filter="brainstem">גזע המוח</button>
+                    <button class="btn small" data-filter="cortex">קליפת המוח</button>
+                    <button class="btn small" data-filter="cerebellum">מוחון</button>
+                    <button class="btn small" data-filter="hipp">היפוקמפוס</button>
+                    <button class="btn small" data-filter="amyg">אמיגדלה</button>
+                </div>
+            </div>
+            <div class="panel">
+                <h3>🧪 ניסויים בטוחים בבית</h3>
+                <div class="grid">
+                    <button class="btn ghost small" data-open="exps">👂 רפלקסים פשוטים</button>
+                    <button class="btn ghost small" data-open="exps">👃 טעימות וריחות</button>
+                    <button class="btn ghost small" data-open="exps">🖐️ מישוש ושיווי משקל</button>
+                </div>
+            </div>
+            <div class="panel">
+                <h3>📚 מילון מושגים</h3>
+                <button class="btn" data-open="gloss">פתח מילון</button>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main" aria-live="polite">
+            <header>
+                <h1>🧠 BrainLab – חקר המוח</h1>
+                <p class="subtitle">אתר לימודי עם הסברים בשלבים לכל גיל, סרגלים ידידותיים, ומפת מוח אינטראקטיבית. <span
+                        class="badge">חדש! מצב ילדים 👶</span></p>
+            </header>
+
+            <!-- Tabs -->
+            <nav class="tabs" role="tablist" aria-label="כרטיסיות תוכן">
+                <button class="tab" role="tab" aria-selected="true" data-tab="cells">🧫 תאים</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="regions">🗺️ אזורים</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="systems">🔗 מערכות</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="activities">🎲 פעילויות</button>
+            </nav>
+
+            <!-- Content placeholder -->
+            <section id="content"></section>
+
+            <!-- Brain map (regions tab extra) -->
+            <section id="mapWrap" class="map" hidden>
+                <h3>🧠 מפת מוח אינטראקטיבית</h3>
+                <div class="brain" id="brainGrid" aria-label="מפת המוח">
+                    <div class="cell" data-region="frontal">אונה מצחית</div>
+                    <div class="cell" data-region="parietal">אונה קודקודית</div>
+                    <div class="cell" data-region="temporal">אונה רקתית</div>
+                    <div class="cell" data-region="occipital">אונה עורפית</div>
+                    <div class="cell" data-region="cerebellum">מוחון</div>
+                    <div class="cell" data-region="brainstem">גזע המוח</div>
+                </div>
+            </section>
+
+            <footer>
+                נבנה באהבה לחקר המוח – תוכן חינוכי בשלבים 👶🧒🧑‍🎓🧪 | טיפ: נסו לשנות רמת גיל ורואים שההסברים מתעדנים.
+            </footer>
+        </main>
+    </div>
+
+    <!-- Dialogs -->
+    <dialog id="dlgGloss">
+        <div class="dialog-head">
+            <strong>📚 מילון מושגים</strong>
+            <button class="btn small" data-close>סגירה</button>
+        </div>
+        <div class="dialog-body" id="glossBody"></div>
+    </dialog>
+
+    <dialog id="dlgExps">
+        <div class="dialog-head">
+            <strong>🧪 ניסויים בטוחים</strong>
+            <button class="btn small" data-close>סגירה</button>
+        </div>
+        <div class="dialog-body" id="expsBody"></div>
+    </dialog>
+
+    <script>
+        // ---------- DATA ----------
+        const LEVELS = ["kids", "elem", "teen", "pro"]; // סדר עולה
+
+        const cells = [
+            {
+                id: "neuron", kind: ["neurons"], title: "נוירון (תא עצב) 🧠⚡",
+                tags: ["דנדריטים", "אקסון", "סינפסה"],
+                text: {
+                    kids: "התא ששולח הודעות קטנטנות בגוף – כמו שליחים עם ברקים.",
+                    elem: "תא שמעביר אותות חשמליים וכימיים. יש לו דנדריטים לקליטה ואקסון לשליחה.",
+                    teen: "נוירון יוצר פוטנציאל פעולה ומתִקשר דרך סינפסות בעזרת נוירוטרנסמיטרים.",
+                    pro: "תא מעורר/מעכב המשלב קלטים סינפטיים לחישוב סף; הולכה מלחית לאורך אקסון עטוף מיאלין."
+                }
+            },
+            {
+                id: "astro", kind: ["glia", "astro"], title: "אסטרוציט ⭐",
+                tags: ["תמיכה", "תזונה", "דם-מוח"],
+                text: {
+                    kids: "תאי עזרה שמאכילים ושומרים על הנוירונים.",
+                    elem: "שומרים על סביבה כימית נכונה ומסייעים בחומת דם-מוח.",
+                    teen: "מסלקים נוירוטרנסמיטרים, מאזנים יונים, ותורמים לפלסטיות סינפטית.",
+                    pro: "אסטרוציטים מבטאים GFAP; רגולציית K+ והטרו-סינפטיק מודולציה דרך טריפארטיט סינפס."
+                }
+            },
+            {
+                id: "oligo", kind: ["glia", "oligo"], title: "אוליגודנדרוציט 🧲",
+                tags: ["מיאלין", "מהירות"],
+                text: {
+                    kids: "מלביש את כבלי העצבים במעטפת שעוזרת למהירות.",
+                    elem: "יוצר מיאלין ב-CNS וכך מזרז הולכה עצבית.",
+                    teen: "מלכד סגמנטים לאורך אקסונים מרובים; הולכה מלחית בין גשרי רנוייה.",
+                    pro: "מיאליניזציה דינמית מווסתת עיתוי רשתות; פגיעה מובילה לירידה במהירות ונוירודגנרציה."
+                }
+            },
+            {
+                id: "micro", kind: ["glia", "micro"], title: "מיקרוגליה 🛡️",
+                tags: ["חיסון", "ניקוי"],
+                text: {
+                    kids: "שומרי היער של המוח – מנקים ומגנים.",
+                    elem: "תאי חיסון תושבי-מוח שמזהים נזק ומסירים פסולת.",
+                    teen: "פאגוציטוזה, עיצוב מעגלים בסינפסות, ציטוקינים.",
+                    pro: "מקור יולדי שק-חלמון; מצבי M1/M2; תרומתם להומאוסטזיס ולפתולוגיה."
+                }
+            },
+            {
+                id: "schwann", kind: ["glia"], title: "תא שוואן 🧵 (PNS)",
+                tags: ["מיאלין פריפרי", "תיקון"],
+                text: {
+                    kids: "עוזר לעצבים מחוץ למוח להחלים.",
+                    elem: "מיאלין במערכת העצבים ההיקפית ותמיכה בהתחדשות.",
+                    teen: "מיאליניזציה אחד-לאחד; תעלות נודאליות.",
+                    pro: "תפקידים ברגנרציה אקסונלית, הפרשת גורמי גדילה והכוונת נביטה."
+                }
+            }
+        ];
+
+        const regions = [
+            {
+                id: "frontal", kind: ["cortex"], title: "אונה מצחית 🧭", tags: ["תכנון", "שליטה"],
+                text: { kids: "מרכז התכנון – מחליט מה עושים.", elem: "קבלת החלטות, שליטה בתנועה, תכנון.", teen: "תפקודים ניהוליים, קורטקס פרה-פרונטלי.", pro: "בקרת עכבות, עבודה בזיכרון (DLPFC), אזור מוטורי ראשי M1." }
+            },
+            {
+                id: "parietal", kind: ["cortex"], title: "אונה קודקודית 🗺️", tags: ["חישה", "מרחב"],
+                text: { kids: "מרגישה מגע וכיוון.", elem: "עיבוד מגע, טמפרטורה ומיקום במרחב.", teen: "שילוב סנסורי; קשב מרחבי.", pro: "S1, S2 עיבוד סומטוסנסורי; מפות הומונקולוס." }
+            },
+            {
+                id: "temporal", kind: ["cortex"], title: "אונה רקתית 🎵", tags: ["שמע", "שפה", "זיכרון"],
+                text: { kids: "שומעת ועוזרת לזכור.", elem: "שמיעה ושיום; היפוקמפוס קרוב.", teen: "אזורים לשפה (וורניקה); קידוד זיכרונות.", pro: "TL מדיאלי לזיכרון אפיזודי; עיבוד אודיטורי ראשוני A1." }
+            },
+            {
+                id: "occipital", kind: ["cortex"], title: "אונה עורפית 👁️", tags: ["ראייה"],
+                text: { kids: "מציירת לנו את מה שרואים.", elem: "עיבוד ראייתי בסיסי.", teen: "מסלולי מה/איפה (ventral/dorsal).", pro: "V1-V5, מיפוי רטינו-טופי וזרימות מידע חזותיות." }
+            },
+            {
+                id: "cerebellum", kind: ["cerebellum"], title: "מוחון ⚖️", tags: ["איזון", "דיוק"],
+                text: { kids: "שומר שלא נתנדנד.", elem: "תיאום תנועה ושיווי משקל.", teen: "קואורדינציה, למידת שגיאות.", pro: "אדפטציה מוטורית דרך Purkinje, השוואת קלטים תחושתיים." }
+            },
+            {
+                id: "brainstem", kind: ["brainstem"], title: "גזע המוח 🌿", tags: ["נשימה", "דופק"],
+                text: { kids: "דואג לנשום ולפעום.", elem: "מרכזים חיוניים ושידור אותות.", teen: "פורמטיו רטיקולריס, מסילות סנסו-מוטוריות.", pro: "גרעינים, עצבים קרניאליים, בקרת ערות וליבה אוטונומית." }
+            },
+            {
+                id: "hipp", kind: ["hipp"], title: "היפוקמפוס 🔁", tags: ["זיכרון"],
+                text: { kids: "מְסַדֵּר סיפורים בזיכרון.", elem: "מעביר זיכרון קצר לארוך.", teen: "LTP, קידוד מרחבי ונוירוגנזה.", pro: "דנטייט ג'יירוס, CA1/CA3, קונסולידציה וזיכרון מרחבי." }
+            },
+            {
+                id: "amyg", kind: ["amyg"], title: "אמיגדלה ❤️‍🔥", tags: ["רגש", "סכנה"],
+                text: { kids: "פעמון האזהרה והרגשות.", elem: "זיהוי פחד והבעות.", teen: "קשירה רגשית לזיכרונות.", pro: "גרעינים לטראליים/בסולטראליים; מודולציית תגובת סטרס." }
+            },
+        ];
+
+        const systems = [
+            {
+                id: "sensory", title: "מערכת חישה 👃👂👀", tags: ["קליטה", "מגע", "טעם"],
+                text: { kids: "החושים מספרים למוח מה קורה.", elem: "עיבוד מידע מחושים שונים.", teen: "מסלולים תחושתיים ועליונות קורטיקלית.", pro: "טרנסדוקציה, קידוד, ושילוב בין-חושי." }
+            },
+            {
+                id: "motor", title: "מערכת תנועה 🏃", tags: ["שרירים", "תכנון"],
+                text: { kids: "אומרת לשרירים לזוז.", elem: "ממסד פירמידלי וחוץ-פירמידלי.", teen: "גרעיני בסיס, מוחון ותכנון תנועה.", pro: "תכניות מוטוריות, תיקון פידבק והוצאה לפועל." }
+            },
+            {
+                id: "memory", title: "מערכת זיכרון 🧩", tags: ["קידוד", "שליפה"],
+                text: { kids: "זוכרת דברים חשובים.", elem: "סוגי זיכרון: קצר/ארוך.", teen: "אפיזודי, סמנטי, פרוצדורלי.", pro: "LTP/LTD, מעגלי היפוקמפוס-קליפתיים." }
+            },
+            {
+                id: "language", title: "שפה 🗣️", tags: ["דיבור", "הבנה"],
+                text: { kids: "עוזרת לנו לדבר ולהבין.", elem: "אזורים לשפה קורטיקלית.", teen: "ברוקה מול וורניקה.", pro: "קישוריות פרונטו-טמפורלית ופלסטיות לשונית." }
+            },
+            {
+                id: "emotion", title: "רגש 💞", tags: ["מוטיבציה", "תגמול"],
+                text: { kids: "להרגיש שמחה או פחד.", elem: "אמיגדלה ומעגל תגמול.", teen: "דופמין, סרוטונין ורשת ברירת-מחדל.", pro: "מעגל לימבי, VTA-NAc ומודולציה קורטיקלית." }
+            },
+        ];
+
+        const glossary = [
+            { term: "סינפסה", def: "נקודת מפגש בין תאים שבה מועבר אות כימי/חשמלי." },
+            { term: "דנדריט", def: "שלוחה קולטת קלט בנוירון." },
+            { term: "אקסון", def: "שלוחה משדרת של נוירון." },
+            { term: "מיאלין", def: "מעטפת בידוד המאיצה הולכה עצבית." },
+            { term: "נוירוטרנסמיטר", def: "חומר כימי שמעביר מסר בין תאים." },
+        ];
+
+        const experiments = [
+            { title: "👀 נקודת עיוורון", how: "ציירו נקודה וקו על דף; עצמ/י עין אחת והזיז/י את הדף עד שהנקודה נעלמת – כך מזהים את נקודת העיוורון." },
+            { title: "👂 רפלקס פיקה", how: "קישרו בעדינות מתחת לפיקת הברך (עם פטיש גומי) וצפו ברגל קופצת – מסלול רפלקס קצר." },
+            { title: "🖐️ התאמת אצבע-אף", how: "בעיניים עצומות נסו לגעת באף – מרגישים את תפקיד המוחון בדיוק התנועה." },
+        ];
+
+        // ---------- STATE ----------
+        const state = {
+            tab: "cells",
+            level: "kids",
+            query: "",
+            filters: new Set(),
+        };
+
+        // ---------- HELPERS ----------
+        const $ = s => document.querySelector(s);
+        const $$ = s => Array.from(document.querySelectorAll(s));
+
+        function render() {
+            // Set level buttons
+            $$("[data-level]").forEach(b => b.classList.toggle("active", b.dataset.level === state.level));
+            // Set tab selection
+            $$(".tab").forEach(t => t.setAttribute("aria-selected", String(t.dataset.tab === state.tab)));
+
+            // Decide dataset
+            let data = state.tab === "cells" ? cells : state.tab === "regions" ? regions : state.tab === "systems" ? systems : [];
+
+            // Filters & search
+            const q = state.query.toLowerCase();
+            data = data.filter(item => {
+                const matchesQ = !q || (item.title + " " + (item.tags || []).join(" ") + Object.values(item.text || {}).join(" ")).toLowerCase().includes(q);
+                const f = state.filters; if (!f.size) return matchesQ;
+                return matchesQ && (item.kind || []).some(k => f.has(k) || f.has(item.id));
+            });
+
+            // Build cards
+            const frag = document.createDocumentFragment();
+            const wrap = document.createElement('div');
+            wrap.className = 'kiosk';
+
+            // Extra brain map for regions tab
+            $("#mapWrap").hidden = state.tab !== "regions";
+
+            // Cards grid
+            const grid = document.createElement('div');
+            grid.className = 'cards';
+
+            data.forEach(item => {
+                const card = document.createElement('article');
+                card.className = 'card';
+                const pill = document.createElement('div'); pill.className = 'pill'; pill.textContent = item.tags?.[0] || 'מידע';
+                const h = document.createElement('h4'); h.textContent = item.title;
+                const p = document.createElement('p'); p.textContent = getText(item);
+                const tags = document.createElement('div'); tags.className = 'tags';
+                (item.tags || []).forEach(t => { const s = document.createElement('span'); s.className = 'tag'; s.textContent = t; tags.appendChild(s); });
+                card.append(pill, h, p, tags);
+                grid.appendChild(card);
+            });
+
+            // Empty state
+            if (!data.length) {
+                const empty = document.createElement('div'); empty.className = 'panel';
+                empty.innerHTML = '<strong>לא נמצאו תוצאות.</strong> נסו להסיר סינונים או לשנות גיל.';
+                wrap.appendChild(empty);
+            }
+
+            wrap.appendChild(grid);
+            frag.appendChild(wrap);
+            $("#content").replaceChildren(frag);
+        }
+
+        function getText(item) {
+            const t = item.text || {}; // graceful
+            switch (state.level) {
+                case 'kids': return t.kids || t.elem || t.teen || t.pro || '';
+                case 'elem': return t.elem || t.teen || t.pro || t.kids || '';
+                case 'teen': return t.teen || t.pro || t.elem || t.kids || '';
+                case 'pro': return t.pro || t.teen || t.elem || t.kids || '';
+                default: return t.elem || '';
+            }
+        }
+
+        // ---------- EVENTS ----------
+        // Level selection
+        $$("[data-level]").forEach(btn => {
+            btn.addEventListener('click', () => { state.level = btn.dataset.level; render(); });
+        });
+
+        // Tabs
+        $$(".tab").forEach(tab => {
+            tab.addEventListener('click', () => { state.tab = tab.dataset.tab; render(); });
+        });
+
+        // Filters
+        $$("[data-filter]").forEach(btn => {
+            btn.addEventListener('click', () => {
+                const k = btn.dataset.filter;
+                if (state.filters.has(k)) state.filters.delete(k); else state.filters.add(k);
+                btn.setAttribute('aria-pressed', String(state.filters.has(k)));
+                btn.classList.toggle('active');
+                render();
+            });
+        });
+
+        // Search
+        $("#q").addEventListener('input', e => { state.query = e.target.value; render(); });
+        $("#clear").addEventListener('click', () => { state.query = ''; $("#q").value = ''; render(); });
+
+        // Brain grid interactions (quick filter)
+        $$("#brainGrid .cell").forEach(c => {
+            c.addEventListener('click', () => {
+                $$("#brainGrid .cell").forEach(x => x.classList.remove('active'));
+                c.classList.add('active');
+                // map region id to filter or search
+                const id = c.dataset.region; state.tab = 'regions'; state.filters = new Set([id]);
+                // reflect UI filters
+                $$("[data-filter]").forEach(b => { b.classList.toggle('active', state.filters.has(b.dataset.filter)); b.setAttribute('aria-pressed', String(state.filters.has(b.dataset.filter))); });
+                render();
+            });
+        });
+
+        // Dialogs: glossary & experiments
+        const dlgGloss = document.getElementById('dlgGloss');
+        const dlgExps = document.getElementById('dlgExps');
+
+        $$('[data-open="gloss"]').forEach(b => b.addEventListener('click', () => {
+            const body = document.getElementById('glossBody');
+            body.innerHTML = glossary.map(g => `<p><strong>${g.term}</strong> — ${g.def}</p>`).join('');
+            dlgGloss.showModal();
+        }));
+
+        $$('[data-open="exps"]').forEach(b => b.addEventListener('click', () => {
+            const body = document.getElementById('expsBody');
+            body.innerHTML = experiments.map(e => `<p><strong>${e.title}</strong><br>${e.how}</p>`).join('');
+            dlgExps.showModal();
+        }));
+
+        $$('dialog [data-close]').forEach(b => b.addEventListener('click', e => e.target.closest('dialog').close()));
+
+        // ---------- INIT ----------
+        render();
+    </script>
+</body>
+
+</html>
